@@ -707,7 +707,7 @@ tr.marked-row, .record-card.marked-row { background: #eef4ee; }
 .areas-workspace .area-explanation { margin-bottom: 10px; }
 .areas-main .areas-footer { padding-top: 12px; }
 
-@media (max-width: 1200px) {
+@media (max-width: 1100px) {
   .register-layout { grid-template-columns: 1fr; gap: 10px; }
   .register-context { position: static; display: grid; grid-template-columns: minmax(180px, .55fr) minmax(0, 1.45fr); align-items: center; gap: 10px 18px; padding: 9px 12px; }
   .register-context-title { flex-direction: row; align-items: baseline; justify-content: space-between; grid-column: 1 / -1; padding-bottom: 0; }
@@ -723,6 +723,9 @@ tr.marked-row, .record-card.marked-row { background: #eef4ee; }
   .register-context .total-item strong { font-size: 12px; }
   .register-context .total-item.total-gross { margin: 0; padding: 0 8px; border: 0; border-left: 1px solid var(--line); background: transparent; }
   .register-context .total-item.total-gross strong { font-size: 13px; }
+}
+
+@media (max-width: 1200px) {
   .register-workarea .mobile-records { display: none; }
   .register-workarea .table-wrap { display: block; }
   .areas-workspace { grid-template-columns: minmax(240px, .8fr) minmax(0, 1.2fr); gap: 16px; }
@@ -831,7 +834,7 @@ tr.marked-row, .record-card.marked-row { background: #eef4ee; }
 .areas-workspace .area-open:focus-visible, .register-context .register-tabs button:focus-visible { outline-offset: 1px; }
 .register-workarea .record-card:focus-within { padding-left: 6px; border-left: 2px solid var(--accent); }
 
-@media (max-width: 1200px) {
+@media (max-width: 1100px) {
   .register-context .ledger-equation { flex-direction: row; align-items: center; gap: 10px; }
   .register-context .ledger-components { grid-template-columns: minmax(0, 1fr) 14px minmax(0, 1fr); flex: 1; padding: 0; }
   .register-context .ledger-components .total-item { padding: 0 8px; border: 0; }
