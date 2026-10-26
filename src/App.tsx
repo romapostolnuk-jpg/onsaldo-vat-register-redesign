@@ -116,25 +116,29 @@ function AreasPage({ onOpenVat }: { onOpenVat: () => void }) {
     { name: 'Kontrole', icon: ListChecks, status: 'Podgląd informacyjny', copy: 'Kontrole wymagają skonfigurowanych ewidencji. W tym podglądzie nie uruchamiamy walidacji księgowych.' },
   ];
   return <main className="main areas-main">
-    <div className="heading-row"><div><div className="eyebrow">EWIDENCJE <span className="demo-chip">DEMO</span></div><h1>Obszary księgowe</h1><p className="subtitle">Mapa obszarów księgowych dostępnych dla aktywnej organizacji.</p></div></div>
-    <div className="notice"><CircleHelp size={16} /><span>Podgląd demonstracyjny. Tylko Rejestr VAT ma tu działający widok; pozostałe obszary nie wykonują operacji księgowych.</span></div>
-    <section className="period-card" aria-labelledby="period-title">
-      <div className="period-icon"><CalendarDays size={20} /></div><div className="period-copy"><h2 id="period-title">Okres księgowy <span>2026</span></h2><p>Rok rozliczeniowy Demo Firma</p><span className="status-badge needs-config">Wymaga konfiguracji</span></div>
-    </section>
-    <section className="vat-destination" aria-labelledby="vat-destination-title">
-      <span className="vat-destination-icon"><FileSpreadsheet size={19} /></span>
-      <div className="vat-destination-copy"><span className="eyebrow">DOSTĘPNE W PODGLĄDZIE</span><h2 id="vat-destination-title">Rejestr VAT</h2><p>Dokumenty sprzedaży i zakupów · dane demonstracyjne</p></div>
-      <span className="status-badge demo-available">Demo</span>
-      <button className="area-open" onClick={onOpenVat}>Otwórz rejestr <ChevronRight size={15} /></button>
-    </section>
-    <section className="areas-panel" aria-labelledby="areas-title"><div className="areas-panel-heading"><h2 id="areas-title">Pozostałe obszary</h2><p>Informacje o dostępności w tej demonstracji.</p></div>
+    <div className="areas-page-header"><div><div className="eyebrow">OBSZAR ROBOCZY <span className="demo-chip">DEMO</span></div><h1>Obszary księgowe</h1></div><p className="areas-header-note">W tym podglądzie aktywny jest Rejestr VAT.</p></div>
+    <div className="areas-context-strip">
+      <section className="period-card" aria-labelledby="period-title">
+        <div className="period-icon"><CalendarDays size={18} /></div><div className="period-copy"><h2 id="period-title">Okres księgowy <span>2026</span></h2><p>Rok rozliczeniowy Demo Firma</p><span className="status-badge needs-config">Wymaga konfiguracji</span></div>
+      </section>
+      <div className="notice areas-notice"><CircleHelp size={15} /><span>Demonstracja bez backendu. Pozostałe obszary nie wykonują operacji księgowych.</span></div>
+    </div>
+    <div className="areas-workspace">
+      <section className="vat-destination" aria-labelledby="vat-destination-title">
+        <span className="vat-destination-icon"><FileSpreadsheet size={20} /></span>
+        <div className="vat-destination-copy"><span className="eyebrow">GOTOWE DO UŻYCIA</span><h2 id="vat-destination-title">Rejestr VAT</h2><p>Dokumenty sprzedaży i zakupów · dane demonstracyjne</p></div>
+        <span className="status-badge demo-available">Demo</span>
+        <button className="area-open" onClick={onOpenVat}>Przejdź do rejestru <ChevronRight size={15} /></button>
+      </section>
+      <section className="areas-panel" aria-labelledby="areas-title"><div className="areas-panel-heading"><div><span className="eyebrow">POZOSTAŁE MODUŁY</span><h2 id="areas-title">Obszary wymagające konfiguracji</h2></div><p>Informacje o dostępności.</p></div>
       <div className="areas-grid">{areas.map(area => { const Icon = area.icon; const isOpen = expanded === area.name; return <article className={`area-item ${isOpen ? 'expanded' : ''}`} key={area.name}>
         <div className="area-item-row"><Icon size={16} aria-hidden="true" /><strong>{area.name}</strong><span className={`status-badge ${area.status.startsWith('Wymaga') ? 'needs-config' : ''}`}>{area.status}</span>
           <button className="area-expand" aria-expanded={isOpen} aria-label={`${isOpen ? 'Zwiń' : 'Pokaż'} informacje: ${area.name}`} onClick={() => setExpanded(isOpen ? null : area.name)}><ChevronDown size={16} /></button>
         </div>
         {isOpen && <p className="area-explanation">{area.copy}</p>}
       </article>; })}</div>
-    </section>
+      </section>
+    </div>
     <footer className="areas-footer"><span>Aktywna organizacja: <strong>Demo Firma</strong></span><span>Podgląd demonstracyjny · bez połączenia z backendem</span></footer>
   </main>;
 }
@@ -160,6 +164,7 @@ function RegisterPage() {
   const [menu, setMenu] = useState<MenuTarget>(null);
   const [detail, setDetail] = useState<RegisterRecord | null>(null);
   const [marked, setMarked] = useState<Set<string>>(() => new Set());
+  const [expandedCards, setExpandedCards] = useState<Set<string>>(() => new Set());
   const [registerMarked, setRegisterMarked] = useState<Set<RegisterKind>>(() => new Set());
   const [toast, setToast] = useState('');
   const searchRef = useRef<HTMLInputElement>(null);
@@ -277,39 +282,42 @@ function RegisterPage() {
       <>
       <main className="main register-main" onClick={() => menu && setMenu(null)}>
         <div className="heading-row">
-          <div>
-            <div className="eyebrow">EWIDENCJE <span className="demo-chip">DEMO</span></div>
+          <div className="page-intro">
+            <div className="eyebrow">EWIDENCJE <span className="intro-divider">/</span> 02 <span className="demo-chip">DEMO</span></div>
             <h1>Rejestry i VAT</h1>
-            <p className="subtitle">Okres: <strong>{currentPeriod || 'wszystkie okresy'}</strong> · dane demonstracyjne</p>
+            <p className="subtitle">Dokumenty sprzedaży i zakupów w wybranym okresie.</p>
           </div>
+          <div className="period-context"><span>OKRES ROZLICZENIOWY</span><strong>{currentPeriod || 'Wszystkie okresy'}</strong></div>
         </div>
 
-        <div className="notice register-notice"><CircleHelp size={15} /><span>Podgląd przykładowych dokumentów — bez połączenia z ewidencją firmy ani KSeF.</span></div>
-
-        <section className="summary" aria-label="Podsumowanie VAT">
-          <div className="summary-head">
-            <span className="section-kicker">PODSUMOWANIE {kind === 'sales' ? 'SPRZEDAŻY' : 'ZAKUPÓW'}</span>
-            <span className="demo-note">{hasResults ? `${visibleRecords.length} ${visibleRecords.length === 1 ? 'dokument w wyniku' : 'dokumentów w wynikach'}` : 'Brak danych'}</span>
-          </div>
-          <div className="totals">
-            <div className="total-item"><span>Netto</span><strong>{hasResults ? formatPLN(totals.net) : '—'}</strong></div>
-            <div className="total-item"><span>VAT</span><strong>{hasResults ? formatPLN(totals.vat) : '—'}</strong></div>
-            <div className="total-item total-gross"><span>Brutto</span><strong>{hasResults ? formatPLN(totals.net + totals.vat) : '—'}</strong></div>
-          </div>
-        </section>
+        <div className="notice register-notice"><CircleHelp size={15} /><span>Dane demonstracyjne — bez backendu i połączenia z KSeF.</span></div>
 
         <section className="register" role="tabpanel" id="register-panel" aria-labelledby={kind === 'sales' ? 'sales-tab' : 'purchases-tab'} aria-label={registerTitle}>
-          <div className="register-heading">
-            <div className="register-tabs" role="tablist" aria-label="Rodzaj rejestru">
-              <button id="sales-tab" aria-controls="register-panel" ref={salesTabRef} role="tab" tabIndex={kind === 'sales' ? 0 : -1} aria-selected={kind === 'sales'} className={kind === 'sales' ? 'active' : ''} onKeyDown={event => { if (event.key === 'ArrowRight') { switchKind('purchases'); purchasesTabRef.current?.focus(); } }} onClick={() => switchKind('sales')}>
-                Rejestr VAT sprzedaży
-              </button>
-              <button id="purchases-tab" aria-controls="register-panel" ref={purchasesTabRef} role="tab" tabIndex={kind === 'purchases' ? 0 : -1} aria-selected={kind === 'purchases'} className={kind === 'purchases' ? 'active' : ''} onKeyDown={event => { if (event.key === 'ArrowLeft') { switchKind('sales'); salesTabRef.current?.focus(); } }} onClick={() => switchKind('purchases')}>
-                Rejestr VAT zakupów
-              </button>
-            </div>
-            <span className="record-count">{demoState === 'populated' ? `${filteredRecords.length} ${filteredRecords.length === 1 ? 'dokument' : 'dokumentów'}` : 'Podgląd demonstracyjny'}</span>
-          </div>
+          <div className="register-layout">
+            <aside className="register-context" aria-label="Kontekst rejestru">
+              <div className="register-context-title"><span className="section-kicker">WYBRANY REJESTR</span><span className="record-count">{demoState === 'populated' ? `${filteredRecords.length} ${filteredRecords.length === 1 ? 'dokument' : 'dokumentów'}` : 'Podgląd demonstracyjny'}</span></div>
+              <div className="register-tabs" role="tablist" aria-label="Rodzaj rejestru">
+                <button id="sales-tab" aria-label="Rejestr VAT sprzedaży" aria-controls="register-panel" ref={salesTabRef} role="tab" tabIndex={kind === 'sales' ? 0 : -1} aria-selected={kind === 'sales'} className={kind === 'sales' ? 'active' : ''} onKeyDown={event => { if (event.key === 'ArrowRight') { switchKind('purchases'); purchasesTabRef.current?.focus(); } }} onClick={() => switchKind('sales')}>
+                  Sprzedaż
+                </button>
+                <button id="purchases-tab" aria-label="Rejestr VAT zakupów" aria-controls="register-panel" ref={purchasesTabRef} role="tab" tabIndex={kind === 'purchases' ? 0 : -1} aria-selected={kind === 'purchases'} className={kind === 'purchases' ? 'active' : ''} onKeyDown={event => { if (event.key === 'ArrowLeft') { switchKind('sales'); salesTabRef.current?.focus(); } }} onClick={() => switchKind('purchases')}>
+                  Zakupy
+                </button>
+              </div>
+              <section className="summary" aria-label={`Podsumowanie VAT ${kind === 'sales' ? 'sprzedaży' : 'zakupów'}`}>
+                <div className="summary-heading"><span>Podsumowanie</span><span>PLN</span></div>
+                <div className="ledger-equation">
+                  <div className="ledger-components">
+                    <div className="total-item"><span>Netto</span><strong>{hasResults ? formatPLN(totals.net) : '—'}</strong></div>
+                    <span className="ledger-operator" aria-hidden="true">+</span>
+                    <div className="total-item"><span>VAT</span><strong>{hasResults ? formatPLN(totals.vat) : '—'}</strong></div>
+                  </div>
+                  <div className="ledger-result"><span className="ledger-operator" aria-hidden="true">=</span><div className="total-item total-gross"><span>Brutto</span><strong>{hasResults ? formatPLN(totals.net + totals.vat) : '—'}</strong></div></div>
+                </div>
+              </section>
+            </aside>
+
+            <div className="register-workarea">
 
           <div className="toolbar">
             <div className="search-box">
@@ -369,7 +377,7 @@ function RegisterPage() {
             </div>
           )}
 
-          {hasFilters && <ActiveFilters query={query} filters={filters} onRemoveQuery={() => setQuery('')} onRemove={updateFilter} />}
+          {hasFilters && <ActiveFilters query={query} filters={filters} onRemoveQuery={() => { setQuery(''); setPage(1); }} onRemove={updateFilter} />}
 
           {demoState === 'error' ? (
             <div className="state-panel error-state" role="alert">
@@ -392,9 +400,16 @@ function RegisterPage() {
               <RegisterTable
                 records={pageRows}
                 marked={isMarked}
+                expandedCards={expandedCards}
                 menuRecord={menu?.record ?? null}
                 menuAbove={menu?.above ?? false}
                 onOpenMenu={(record, above) => setMenu(current => current?.record.id === record.id && current.record.identifier === record.identifier ? null : { record, above })}
+                onToggleExpanded={identifier => setExpandedCards(current => {
+                  const next = new Set(current);
+                  if (next.has(identifier)) next.delete(identifier);
+                  else next.add(identifier);
+                  return next;
+                })}
                 onPreview={(record, trigger) => { detailTriggerRef.current = trigger; setDetail(record); setMenu(null); }}
                 onCopy={copyIdentifier}
                 onToggleMark={toggleMarked}
@@ -410,6 +425,8 @@ function RegisterPage() {
               />
             </>
           )}
+            </div>
+          </div>
         </section>
 
         <footer className="page-footer">
@@ -466,12 +483,14 @@ function ActiveFilters({ query, filters, onRemoveQuery, onRemove }: {
   );
 }
 
-function RegisterTable({ records, marked, menuRecord, menuAbove, onOpenMenu, onPreview, onCopy, onToggleMark }: {
+function RegisterTable({ records, marked, expandedCards, menuRecord, menuAbove, onOpenMenu, onToggleExpanded, onPreview, onCopy, onToggleMark }: {
   records: RegisterRecord[];
   marked: (record: RegisterRecord) => boolean;
+  expandedCards: Set<string>;
   menuRecord: RegisterRecord | null;
   menuAbove: boolean;
   onOpenMenu: (record: RegisterRecord, above: boolean) => void;
+  onToggleExpanded: (identifier: string) => void;
   onPreview: (record: RegisterRecord, trigger: HTMLButtonElement | null) => void;
   onCopy: (record: RegisterRecord) => void;
   onToggleMark: (record: RegisterRecord) => void;
@@ -496,14 +515,17 @@ function RegisterTable({ records, marked, menuRecord, menuAbove, onOpenMenu, onP
     <>
       <div className="table-wrap">
         <table>
-          <thead><tr><th>Kontrahent</th><th>Data</th><th>Numer dokumentu</th><th>KSeF · demo</th><th>Identyfikator</th><th className="actions-col"><span className="sr-only">Akcje</span></th></tr></thead>
+          <thead><tr><th>Dokument</th><th>Data</th><th>Operacja</th><th>KSeF · demo</th><th>Identyfikator</th><th className="number-cell">Netto</th><th className="number-cell">VAT</th><th className="number-cell">Brutto</th><th className="actions-col"><span className="sr-only">Akcje</span></th></tr></thead>
           <tbody>{records.map((record, index) => (
             <tr key={record.id} className={marked(record) ? 'marked-row' : ''}>
-              <td><span className="vendor-name" title={record.vendor}>{record.vendor}</span>{marked(record) && <span className="marked-label"><Tag size={11} /> Do sprawdzenia</span>}</td>
+              <td><div className="document-identity"><span className="vendor-name" title={record.vendor}>{record.vendor}</span><span className="doc-number" title={record.document}>{record.document}</span></div>{marked(record) && <span className="marked-label"><Tag size={11} /> Do sprawdzenia</span>}</td>
               <td className="date-cell">{record.date}</td>
-              <td><span className="doc-number" title={record.document}>{record.document}</span></td>
+              <td><span className="operation-name" title={record.operation}>{record.operation}</span></td>
               <td><span className="status-pill" title="Status przykładowy; brak połączenia z KSeF">{record.ksef}</span></td>
               <td><span className="identifier" title={record.identifier}>{record.identifier}</span></td>
+              <td className="number-cell">{formatPLN(record.net)}</td>
+              <td className="number-cell">{formatPLN(record.vat)}</td>
+              <td className="number-cell gross-cell">{formatPLN(record.net + record.vat)}</td>
               <td className="actions-col">{actionMenu(record, index)}</td>
             </tr>
           ))}</tbody>
@@ -511,15 +533,24 @@ function RegisterTable({ records, marked, menuRecord, menuAbove, onOpenMenu, onP
       </div>
       <div className="mobile-records">
         {records.map((record, index) => (
-          <article className={`record-card ${marked(record) ? 'marked-row' : ''}`} key={record.id}>
+          <article className={`record-card ${marked(record) ? 'marked-row' : ''} ${expandedCards.has(record.identifier) ? 'expanded' : ''}`} key={record.id}>
             <div className="record-card-head">
               <div className="record-card-identity"><strong>{record.vendor}</strong><span className="doc-number" title={record.document}>{record.document}</span>{marked(record) && <span className="marked-label"><Tag size={11} /> Do sprawdzenia</span>}</div>
               {actionMenu(record, index)}
             </div>
-            <div className="mobile-data">
+            <div className="mobile-record-meta">
               <div className="mobile-meta-line"><span>{record.date}</span><span className="status-pill" title="Informacja demonstracyjna · bez połączenia z KSeF">{record.ksef}</span></div>
-              <DataField label="Identyfikator"><span className="identifier" title={record.identifier}>{record.identifier}</span></DataField>
             </div>
+            <button className="card-details-toggle" aria-expanded={expandedCards.has(record.identifier)} aria-controls={`card-detail-${record.identifier}`} onClick={() => onToggleExpanded(record.identifier)}>
+              {expandedCards.has(record.identifier) ? 'Ukryj szczegóły' : 'Szczegóły dokumentu'}<ChevronDown size={15} />
+            </button>
+            {expandedCards.has(record.identifier) && <div className="mobile-data" id={`card-detail-${record.identifier}`}>
+              <DataField label="Rodzaj operacji">{record.operation}</DataField>
+              <DataField label="Identyfikator"><span className="identifier" title={record.identifier}>{record.identifier}</span></DataField>
+              <DataField label="Netto">{formatPLN(record.net)}</DataField>
+              <DataField label="VAT">{formatPLN(record.vat)}</DataField>
+              <DataField label="Brutto">{formatPLN(record.net + record.vat)}</DataField>
+            </div>}
           </article>
         ))}
       </div>
@@ -593,6 +624,7 @@ function RecordDetails({ record, kind, onClose }: { record: RegisterRecord; kind
           <div><dt>Seria dokumentów</dt><dd>{record.series}</dd></div>
           <div><dt>Netto · demo</dt><dd>{formatPLN(record.net)}</dd></div>
           <div><dt>VAT · demo</dt><dd>{formatPLN(record.vat)}</dd></div>
+          <div><dt>Brutto · demo</dt><dd>{formatPLN(record.net + record.vat)}</dd></div>
         </dl>
         <div className="dialog-footer"><span>Wartości przykładowe — podgląd nie jest dokumentem księgowym.</span><button className="primary-button" onClick={onClose}>Gotowe</button></div>
       </section>

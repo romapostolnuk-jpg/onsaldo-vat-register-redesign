@@ -25,6 +25,7 @@ Thumbs.db
 .idea/
 .vscode/
 
-# Local reference screenshots
-reference-overview.png
-reference-register.png
+# Reference screenshots and local demo exports
+*reference-overview.png
+*reference-register.png
+/rejestr-vat-*-demo.csv

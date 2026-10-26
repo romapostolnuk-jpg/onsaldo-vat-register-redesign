@@ -1,6 +1,6 @@
-# Onsaldo VAT Register Demo
+# Onsaldo Ledger Workspace
 
-A responsive, Polish-language accounting SaaS prototype built with React, TypeScript, and Vite. The app connects an accounting areas landing page with demonstration VAT sales and purchase registers.
+A responsive, Polish-language accounting SaaS prototype built with React, TypeScript, and Vite. It connects an accounting areas landing page with demonstration VAT sales and purchase registers.
 
 ## Features
 
@@ -20,10 +20,10 @@ A responsive, Polish-language accounting SaaS prototype built with React, TypeSc
 
 ## Local setup
 
-Use a Node.js version supported by the installed Vite release and npm.
+Use Node.js 20.19+ or 22.12+ and npm. These versions meet the current Vite runtime requirement.
 
 ```sh
-npm install
+npm ci
 npm run dev
 ```
 
@@ -39,6 +39,16 @@ npm run preview
 
 `npm run build` runs the TypeScript project build before creating the production bundle in `dist/`. `npm run preview` serves that bundle locally.
 
+## Deploy to Vercel
+
+Import the repository into Vercel and use the Vite defaults:
+
+- Install command: `npm ci`
+- Build command: `npm run build`
+- Output directory: `dist`
+
+The app uses hash-based navigation (`#areas` and `#vat`), so a custom `vercel.json` rewrite is not required.
+
 ## Demo limitations
 
-This is a demonstration prototype with fictional data. It has no backend, persistent accounting operations, or real KSeF integration. Register actions and statuses are illustrative and do not submit data to an accounting or government service.
+This is a demonstration prototype using fictional data. It has no backend, persistent accounting operations, or real KSeF integration. Register actions and statuses are illustrative and do not submit data to an accounting or government service.
