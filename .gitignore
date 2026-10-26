@@ -1,0 +1,30 @@
+# Dependencies and generated builds
+node_modules/
+dist/
+coverage/
+.vite/
+.vite-cache/
+.vercel/
+
+# Local environment files and secrets
+.env
+.env.*
+!.env.example
+!.env.template
+*.local
+
+# TypeScript build metadata
+*.tsbuildinfo
+.tsbuildinfo*
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Local reference screenshots
+reference-overview.png
+reference-register.png
