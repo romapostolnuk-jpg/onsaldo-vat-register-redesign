@@ -669,7 +669,7 @@ tr.marked-row, .record-card.marked-row { background: #eef4ee; }
 .register-workarea .marked-row { background: #f7f8f2; }
 .register-workarea .pagination { min-height: 44px; border-top: 0; }
 .register-workarea .state-panel { min-height: 96px; margin-top: 6px; }
-.register-workarea .mobile-records { display: none; }
+.register-workarea .mobile-records { display: none; flex-direction: column; gap: 0; }
 .register-workarea .mobile-record-meta { display: flex; min-width: 0; align-items: center; justify-content: space-between; gap: 10px; padding-top: 6px; }
 .card-details-toggle { display: inline-flex; min-height: 32px; align-items: center; gap: 5px; margin-top: 3px; padding: 0 4px; border: 0; background: transparent; color: var(--accent-strong); font-size: 11px; font-weight: 650; cursor: pointer; }
 .card-details-toggle svg { transition: transform .15s; }
@@ -723,8 +723,8 @@ tr.marked-row, .record-card.marked-row { background: #eef4ee; }
   .register-context .total-item strong { font-size: 12px; }
   .register-context .total-item.total-gross { margin: 0; padding: 0 8px; border: 0; border-left: 1px solid var(--line); background: transparent; }
   .register-context .total-item.total-gross strong { font-size: 13px; }
-  .register-workarea .mobile-records { display: flex; }
-  .register-workarea .table-wrap { display: none; }
+  .register-workarea .mobile-records { display: none; }
+  .register-workarea .table-wrap { display: block; }
   .areas-workspace { grid-template-columns: minmax(240px, .8fr) minmax(0, 1.2fr); gap: 16px; }
 }
 
@@ -854,4 +854,10 @@ tr.marked-row, .record-card.marked-row { background: #eef4ee; }
 @media (max-width: 380px) {
   .register-context .ledger-components .total-item strong { font-size: 10px; }
   .register-context .ledger-result .total-item.total-gross strong { font-size: 12px; }
+}
+
+/* Keep the full ledger table on desktop widths; stack document cards below. */
+@media (max-width: 1023px) {
+  .register-workarea .table-wrap { display: none; }
+  .register-workarea .mobile-records { display: flex; }
 }
